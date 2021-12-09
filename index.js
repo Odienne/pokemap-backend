@@ -52,10 +52,18 @@ const areas = [
 ];
 
 app.get('/pokemon', (req, res) => {
-    let city = areas.find(element => (element.lattitude === parseFloat(req.query.lat) && element.longitude === parseFloat(req.query.long)));
-    let id_poke = getRandomInt(898);
-    city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`
-    res.send(city);
+    if (Object.keys(req.query).length !== 0) {
+        let city = areas.find(element => (element.lattitude === parseFloat(req.query.lat) && element.longitude === parseFloat(req.query.long)));
+        let id_poke = getRandomInt(898);
+        city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`;
+        res.send(city);
+    } else {
+        for (let city of areas) {
+            let id_poke = getRandomInt(898);
+            city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`;
+        }
+        res.send(areas);
+    }
     /*fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`)
         .then(function(response) {
             console.log(response)
