@@ -6,7 +6,7 @@ import cors from 'cors'
 
 app.use(cors());
 
-/*const areas = [
+const areas = [
     {
         name: 'Toulouse',
         lattitude :43.6044622,
@@ -49,11 +49,13 @@ app.use(cors());
         longitude :5.405,
         pokemon: ''
     },
-];*/
+];
 
-app.get('/', (req, res) => {
+app.get('/pokemon', (req, res) => {
+    let city = areas.find(element => (element.lattitude === parseFloat(req.query.lat) && element.longitude === parseFloat(req.query.long)));
     let id_poke = getRandomInt(898);
-    res.send(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`);
+    city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`
+    res.send(city);
     /*fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`)
         .then(function(response) {
             console.log(response)
