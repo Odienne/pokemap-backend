@@ -1,0 +1,22 @@
+{
+  "name": "pokemap-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Odienne/pokemap-front.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Odienne/pokemap-front/issues"
+  },
+  "homepage": "https://github.com/Odienne/pokemap-front#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
