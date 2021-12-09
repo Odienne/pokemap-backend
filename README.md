@@ -1,1 +1,2 @@
-# pokemap-front
+# pokemap-backend
+
