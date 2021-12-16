@@ -45,7 +45,7 @@ app.get('/pokemon', (req, res) => {
             })
                 .then(function(pokemon) {
                     let poke_id = pokemon.id
-                    res.send(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke_id}.png`);
+                    res.json(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke_id}.png`);
                 });
         });
 })
