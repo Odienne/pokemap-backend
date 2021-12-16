@@ -6,74 +6,50 @@ import cors from 'cors'
 
 app.use(cors());
 
-const areas = [
-    {
-        name: 'Toulouse',
-        lattitude :43.6044622,
-        longitude :1.4442469,
-        pokemon: ''
-    },
-    {
-        name: 'Paris',
-        lattitude :48.8534,
-        longitude :2.3488,
-        pokemon: ''
-    },
-    {
-        name: 'Bordeaux',
-        lattitude :44.841225,
-        longitude :-0.5800364,
-        pokemon: ''
-    },
-    {
-        name: 'Lyon',
-        lattitude :45.758,
-        longitude :4.835,
-        pokemon: ''
-    },
-    {
-        name: 'Nantes',
-        lattitude :47.239367,
-        longitude :-1.555335,
-        pokemon: ''
-    },
-    {
-        name: 'Nice',
-        lattitude :43.712854,
-        longitude :7.253866,
-        pokemon: ''
-    },
-    {
-        name: 'Marseille',
-        lattitude :43.282,
-        longitude :5.405,
-        pokemon: ''
-    },
-];
+function set_type(code){
+    if([71, 73, 75, 77, 85, 86].includes(code)){
+        return "ice";
+    }
+    if([51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(code)){
+        return "water";
+    }
+    if([45, 48].includes(code)){
+        return "ghost";
+    }
+    if([95, 96, 99].includes(code)){
+        return "electric";
+    }
+    if(code === 0){
+        return "fire";
+    }
+    if([1, 2, 3].includes(code)){
+        return "dark";
+    }
+}
 
 app.get('/pokemon', (req, res) => {
+    let type = "";
     if (Object.keys(req.query).length !== 0) {
-        let city = areas.find(element => (element.lattitude === parseFloat(req.query.lat) && element.longitude === parseFloat(req.query.long)));
-        let id_poke = getRandomInt(898);
-        city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`;
-        res.send(city);
+        type = set_type(parseInt(req.query.meteo));
     } else {
-        for (let city of areas) {
-            let id_poke = getRandomInt(898);
-            city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`;
-        }
-        res.send(areas);
+        type = "normal";
     }
-    /*fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id_poke}.png`)
+    fetch(`https://pokeapi.co/api/v2/type/${type}`)
         .then(function(response) {
             console.log(response)
-            return response.blob();
+            return response.json();
         })
         .then(function(myPoke) {
-            /!*const objectURL = URL.createObjectURL(myPoke);
-            myImage.src = objectURL;*!/
-            res.send(myPoke);
-        });*/
+            let poke = getRandomInt(myPoke.pokemon.length);
+            fetch(`https://pokeapi.co/api/v2/pokemon/${myPoke.pokemon[poke].pokemon.name}/`).then(function(response) {
+                console.log(response)
+                return response.json();
+            })
+                .then(function(pokemon) {
+                    let poke_id = pokemon.id
+                    res.send(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${poke_id}.png`);
+                });
+        });
 })
 
 app.listen(port, () => {
