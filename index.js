@@ -2,7 +2,7 @@ import express from 'express'
 const app = express()
 const port = 3000
 import cors from 'cors'
-/*import fetch from 'node-fetch'*/
+import fetch from 'node-fetch'
 
 app.use(cors());
 
@@ -36,13 +36,11 @@ app.get('/pokemon', (req, res) => {
     }
     fetch(`https://pokeapi.co/api/v2/type/${type}`)
         .then(function(response) {
-            console.log(response)
             return response.json();
         })
         .then(function(myPoke) {
             let poke = getRandomInt(myPoke.pokemon.length);
             fetch(`https://pokeapi.co/api/v2/pokemon/${myPoke.pokemon[poke].pokemon.name}/`).then(function(response) {
-                console.log(response)
                 return response.json();
             })
                 .then(function(pokemon) {
@@ -52,10 +50,36 @@ app.get('/pokemon', (req, res) => {
         });
 })
 
+app.post('/pokemon', (req, res) => {
+    let type = "";
+    let cities = req.body
+    for (let city of cities) {
+        if (city.meteo) {
+            type = set_type(city.meteo);
+        } else {
+            type = "normal";
+        }
+        fetch(`https://pokeapi.co/api/v2/type/${type}`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (myPoke) {
+                let poke = getRandomInt(myPoke.pokemon.length);
+                fetch(`https://pokeapi.co/api/v2/pokemon/${myPoke.pokemon[poke].pokemon.name}/`).then(function (response) {
+                    return response.json();
+                })
+                    .then(function (pokemon) {
+                        city.pokemon = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
+                    });
+            });
+    }
+    res.json(cities);
+});
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * max) + 1;
+    return Math.floor(Math.random() * max);
 }
